@@ -2,12 +2,44 @@
 # -*- coding: utf-8 -*-
 # see https://api.serverius.net/
 
-DOCUMENTATION = '''
-This tasks uploads an Certificate+Key to qbine and sets an description with a sha256 hash of the
-uploaded material. With the hash it is able to evaluate if an upload is needed.
+DOCUMENTATION = r'''
+module: serverius_qbine_cert_upload
+short_description: Upload SSL Certificates to Serverius Qbine
+version_added: 1.0.0
+description: |
+  This tasks uploads an Certificate+Key to qbine and sets an description with a sha256 hash of the
+  uploaded material. With the hash it is able to evaluate if an upload is needed.
+  See https://serverius.net/qbine/ for more information aboute Qbine WAF.
+options:
+  user:
+    description: Serverius Api Username
+    required: true
+    type: str
+  secret:
+    description: Serverius Api Password
+    required: true
+    type: str
+  api_url:
+    description: Serverius Api Url
+    default: https://api.serverius.net
+    type: str
+  domain_name_uuid:
+    description: UUID of Serverius Doman
+    required: true
+    type: str
+  keyfile:
+    description: Path to a ssl keyfile.
+    required: true
+    type: str
+  certfile:
+    description: Path to a ssl Certfile.
+    required: true
+    type: str
+author:
+ - Sven Anders (@tabacha)
 '''
 
-EXAMPLES = '''
+EXAMPLES = r'''
 - name: Serverius upload
   serverius_qbine_cert_upload:
     user: "{{ serverius_user }}"
@@ -16,6 +48,15 @@ EXAMPLES = '''
     domain_name_uuid: "{{ letsencrypt_key.serverius_qbine_uuid }}"
     keyfile: "/etc/letsencrypt/certs/{{ letsencrypt_key.name }}/privkey.key"
     certfile: "/etc/letsencrypt/certs/{{ letsencrypt_key.name }}/fullchain.pem"
+'''
+
+
+RETURN = r'''
+description:
+  description: The Description set in Domain at serverius.
+  type: str
+  returned: always
+  sample: "Uploaded key by ansible with sha256: 07d..."
 '''
 # import module snippets
 from ansible.module_utils.basic import *
