@@ -136,6 +136,8 @@ def main():
         else:
             module.fail_json(msg="unkown result %s" % enc_answer)
     else:
+        if ('error' in enc_answer):
+            module.fail_json(msg=enc_answer['error'])
         if ('description' not in enc_answer):
             changed = True
         else:
