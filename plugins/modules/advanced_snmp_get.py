@@ -7,12 +7,83 @@ from ansible.module_utils.basic import AnsibleModule
 __metaclass__ = type
 
 DOCUMENTATION = r'''
+module: advanced_snmp_get
+short_description: Get SNMP Data from devices with lists, calculation
+version_added: 1.2.0
+description: |
+  Get SNMP Data from devices, like IDRAC, Switches, group by lists, make divisions.
+options:
+  host:
+    description: Hostname or IP address of the device
+    required: true
+    type: str
+  community:
+    description: SNMP Community
+    required: true
+    default: public
+    type: str
+  snmp:
+    type: dict
+    description: SNMP OIDS to get
+    suboptions:
+      oid:
+        required: true
+        type: str
+        description: OID to get
+      type:
+        description: type to convert to
+        choices:
+          - str
+          - int
+          - float
+        default: str
+      divide_by:
+        description: divide the value
+        type: float
+  snmp_bulk_blocks:
+    type: dict
+    description: SNMP Blocks to get (see SNMP for syntax of a block)
 '''
 
 EXAMPLES = r'''
+    - name: Get values from dell idrac
+      scaleuptechnologies.utils.advanced_snmp_get:
+        host: 172.18.0.39
+        community: public
+        snmp:
+          service_tag:
+            oid: "1.3.6.1.4.1.674.10892.5.1.3.2.0"
+          express_code:
+            oid: "1.3.6.1.4.1.674.10892.5.1.3.3.0"
+          model:
+            oid: "1.3.6.1.4.1.674.10892.5.1.3.12.0"
+          bios_version:
+            oid: "1.3.6.1.4.1.674.10892.5.4.300.50.1.8.1.1"
+        snmp_bulk_blocks:
+          power_supply:
+            slot:
+              oid: "1.3.6.1.4.1.674.10892.5.4.600.12.1.15.1"
+            ratedWatt:
+              oid: "1.3.6.1.4.1.674.10892.5.4.600.12.1.14.1"
+              type: float
+              divide_by: 10
 '''
 
 RETURN = r'''
+data:
+  description: The SNMP Data from the device
+  type: complex
+  returned: always
+  sample:
+    bios_version: "2.4.2"
+    express_code: "13043577818"
+    model: "PowerEdge R420"
+    service_tag: "5ZPT522"
+    power_supply:
+        - ratedWatt: 666.0
+          slot: "PSU.Slot.1"
+        - ratedWatt: 666.0
+          slot: "PSU.Slot.2"
 '''
 
 try:
