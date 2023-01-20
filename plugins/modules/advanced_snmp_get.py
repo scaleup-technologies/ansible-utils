@@ -55,7 +55,8 @@ def snmp_fetch(handler, count, prefix_to_check=None):
     return result
 
 
-def snmp_get(target, oids, credentials, port=161, engine=hlapi.SnmpEngine(), context=hlapi.ContextData()):
+def snmp_get(target, oids, credentials, port=161, engine=hlapi.SnmpEngine(),
+             context=hlapi.ContextData()):
     handler = hlapi.getCmd(
         engine,
         credentials,
@@ -66,7 +67,8 @@ def snmp_get(target, oids, credentials, port=161, engine=hlapi.SnmpEngine(), con
     return snmp_fetch(handler, 1)[0]
 
 
-def snmp_bulk_walk(target, bulk_block, credentials, port=161, engine=hlapi.SnmpEngine(), context=hlapi.ContextData()):
+def snmp_bulk_walk(target, bulk_block, credentials, port=161,
+                   engine=hlapi.SnmpEngine(), context=hlapi.ContextData()):
     nonRepeaters = 0
     maxRepetitions = 25
     first_key = list(bulk_block.keys())[0]
