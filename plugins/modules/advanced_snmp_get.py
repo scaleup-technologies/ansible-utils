@@ -101,6 +101,8 @@ def construct_object_types(list_of_oids):
         object_types.append(hlapi.ObjectType(hlapi.ObjectIdentity(oid)))
     return object_types
 
+def udp_transport(host,port):
+    return hlapi.UdpTransportTarget((host, port),timeout=2)
 
 def snmp_fetch(handler, count, prefix_to_check=None):
     result = []
@@ -131,7 +133,7 @@ def snmp_get(target, oids, credentials, port=161, engine=hlapi.SnmpEngine(),
     handler = hlapi.getCmd(
         engine,
         credentials,
-        hlapi.UdpTransportTarget((target, port)),
+        udp_transport(target, port),
         context,
         *construct_object_types(oids)
     )
@@ -145,7 +147,7 @@ def snmp_bulk_walk(target, bulk_block, credentials, port=161,
     first_key = list(bulk_block.keys())[0]
     first_oid = bulk_block[first_key]['oid']
     handler = hlapi.bulkCmd(engine, credentials,
-                            hlapi.UdpTransportTarget((target, port)),
+                            udp_transport(target, port),
                             context,
                             nonRepeaters, maxRepetitions,
                             hlapi.ObjectType(hlapi.ObjectIdentity(first_oid)))
