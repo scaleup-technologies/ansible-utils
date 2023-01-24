@@ -4,6 +4,10 @@
 
 The documentation for all modules are available through ansible-doc.
 
+The is a online version under:
+
+https://scaleup-technologies.github.io/ansible-utils/collections/index_module.html
+
 ## Installation
 
 ```
