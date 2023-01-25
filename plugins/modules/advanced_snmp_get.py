@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import (absolute_import, division, print_function)
-from pprint import pprint
+from pprint import pprint, pformat
 from ansible.module_utils.basic import AnsibleModule
 __metaclass__ = type
 
@@ -117,7 +117,7 @@ def snmp_fetch(handler, count, prefix_to_check=None):
                     if prefix_to_check is not None:
                         doit = (str(var_bind[0]).startswith(prefix_to_check))
                     if doit:
-                        items[str(var_bind[0])] = str(var_bind[1])
+                        items[str(var_bind[0])] = var_bind[1].prettyPrint()
                 if len(items.keys()) > 0:
                     result.append(items)
             else:
@@ -166,6 +166,13 @@ def snmp_bulk_walk(target, bulk_block, credentials, port=161,
         rtn_list.append(rtn)
     return rtn_list
 
+def int_to_mac(macint):
+    if type(macint) != int:
+        raise ValueError('invalid integer')
+    return ':'.join(['{}{}'.format(a, b)
+                     for a, b
+                     in zip(*[iter('{:012x}'.format(macint))]*2)])
+
 
 def value_end_calc(value, field_dict):
     dest_type = 'str'
@@ -175,6 +182,10 @@ def value_end_calc(value, field_dict):
         value = int(value)
     elif dest_type == 'float':
         value = float(value)
+    elif dest_type == 'mac_address':
+        if not(value.startswith('0x')):
+          raise RuntimeError('Wrong macAddress Format %s'% value)
+        value = int_to_mac(int(value,base=16)).upper()
     elif dest_type != 'str':
         raise RuntimeError('Wrong type %s ' % dest_type)
     if 'divide_by' in field_dict:
