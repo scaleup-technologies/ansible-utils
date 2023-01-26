@@ -183,6 +183,7 @@ def value_end_calc(value, field_dict):
     elif dest_type == 'float':
         value = float(value)
     elif dest_type == 'mac_address':
+      if value!='':
         if not(value.startswith('0x')):
           raise RuntimeError('Wrong macAddress Format %s'% value)
         value = int_to_mac(int(value,base=16)).upper()
