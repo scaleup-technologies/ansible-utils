@@ -21,7 +21,7 @@ fi
 set -e
 
 sed -i -e "s/version: .*/version: $VERSION/" galaxy.yml
-git commit -m 'New Version $VERSION' galaxy.yml
+echo git commit -m 'New Version $VERSION' galaxy.yml
 git tag v${VERSION}
 git push origin v${VERSION}
 
