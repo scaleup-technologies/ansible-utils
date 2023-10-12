@@ -144,7 +144,7 @@ def main():
 
         interfaces.append(interface)
 
-    ansible_facts['intefaces'] = interfaces
+    ansible_facts['interfaces'] = interfaces
     c = []
     for ele in vip_tree.findall('vip'):
         (tag, ce) = recursive_dict(ele)
