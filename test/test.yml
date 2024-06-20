@@ -46,8 +46,3 @@
         ansible_user: root
       tags:
         - opnsense
-    - name: debug
-      debug:
-        msg: "{{ xxx }}"
-      tags:
-        - opnsense

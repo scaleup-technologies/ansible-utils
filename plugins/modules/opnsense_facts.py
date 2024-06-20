@@ -31,31 +31,28 @@ EXAMPLES = r'''
 
 
 RETURN = r'''
-key:
-  description: The key that the module was running against.
+interfaces:
+  description: Array of interfaces
   returned: success
-  type: str
-  sample: https://github.com/user.keys
-key_option:
-  description: Key options related to the key.
-  returned: success
-  type: str
-  sample: null
-state:
-  description: Whether the given key (with the given key_options) should or should not be in the file
-  returned: success
-  type: str
-  sample: present
-unique:
-  description: Whether the key is unique
-  returned: success
-  type: bool
-  sample: false
-user:
-  description: The username on the remote host whose authorized_keys file will be modified
-  returned: success
-  type: str
-  sample: user
+  type: array
+  example:
+    - descr: "MGMNetHamburg",
+      enable: true,
+      if: "ix1_vlan923",
+      ip: [],
+      mac: "90:e2:ba:2c:e6:81",
+      vlan_id: 923,
+      vlan_parent: "ix1",
+      vlan_proto: "802.1q"
+    - descr: "AdminHamburg",
+      enable: true,
+      if: "ix1_vlan409",
+      ip: [],
+      mac: "90:e2:ba:2c:e6:81",
+      vlan_id: 409,
+      vlan_parent: "ix1",
+      vlan_proto: "802.1q"
+
 '''
 
 
@@ -149,7 +146,6 @@ def main():
     for ele in vip_tree.findall('vip'):
         (tag, ce) = recursive_dict(ele)
         c.append(ce)
-    ansible_facts['xxx'] = 1
     results['ansible_facts'] = ansible_facts
 
     module.exit_json(**results)
