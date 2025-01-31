@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 import re
 import ipaddress
-from lxml import etree
+import xml.etree.ElementTree as ET
 from ansible.module_utils.basic import AnsibleModule
 from base64 import b64encode
 from subprocess import run
@@ -70,9 +70,10 @@ def main():
 
     results = {}
     ansible_facts = {}
-    tree = etree.parse("/conf/config.xml")
-    interfaces_tree = tree.find("interfaces")
-    vip_tree = tree.find('virtualip')
+    tree = ET.parse("/conf/config.xml")
+    root = tree.getroot()
+    interfaces_tree = root.find("interfaces")
+    vip_tree = root.find("virtualip")
     # count=0
     #context = etree.iterwalk(interfaces_tree, events=("start", "end"))
     # for action, elem in context:
@@ -82,6 +83,8 @@ def main():
     vip_data = recursive_dict(vip_tree)
     interfaces = []
     for k in data.keys():
+        if 'descr' not in data[k] or 'if' not in data[k]:
+            continue
         interface = {}
         interface['if'] = data[k]['if']
         interface['descr'] = data[k]['descr']
